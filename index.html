@@ -15,14 +15,25 @@
         canvas.width = 480;
         canvas.height = 320;
         let x = 100;
-        
-        function desenha(){
+        let t0;
+        let dt;
+        requestAnimationFrame (desenha);
+
+        function desenha(t){
+            t0 = t0 ?? t;
+            dt = (t - t0)/1000;
             // desenha fundo
             cont.fillStyle = "black";
             cont.fillRect(0,0,canvas.width,canvas.height);
+
+            //Atualiza estado
+            x = x +1;
+
             // desenha elementos
             cont.fillStyle = "white";
             cont.fillRect(x,150,20,20);
+            requestAnimationFrame (desenha);
+            t0 = t;
         }
     </script>
 </body>
