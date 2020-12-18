@@ -14,12 +14,16 @@
         let cont = canvas.getContext("2d");
         canvas.width = 480;
         canvas.height = 320;
-
-        cont.fillStyle = "black";
-        cont.fillRect(0,0,canvas.width,canvas.height);
-
-        cont.fillStyle = "white";
-        cont.fillRect(100,150,20,20);
+        let x = 100;
+        
+        function desenha(){
+            // desenha fundo
+            cont.fillStyle = "black";
+            cont.fillRect(0,0,canvas.width,canvas.height);
+            // desenha elementos
+            cont.fillStyle = "white";
+            cont.fillRect(x,150,20,20);
+        }
     </script>
 </body>
 </html>
