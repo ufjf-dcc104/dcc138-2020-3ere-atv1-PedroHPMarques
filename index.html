@@ -14,8 +14,12 @@
         let cont = canvas.getContext("2d");
         canvas.width = 480;
         canvas.height = 320;
+
         cont.fillStyle = "black";
-        cont.fillRect(10,30,40,50);
+        cont.fillRect(0,0,canvas.width,canvas.height);
+
+        cont.fillStyle = "white";
+        cont.fillRect(100,150,20,20);
     </script>
 </body>
 </html>
