@@ -15,7 +15,9 @@
         canvas.width = 480;
         canvas.height = 320;
         let x = 100;
+        let vx = 0;
         let y = 100;
+        let vy = 0; 
         let t0;
         let dt;
         requestAnimationFrame (desenha);
@@ -28,14 +30,38 @@
             cont.fillRect(0,0,canvas.width,canvas.height);
 
             //Atualiza estado
-            x = x + 175*dt;  
-            y = y + 100*Math.cos(t/500)*dt;   
+            x = x + vx*dt;  
+            y = y + vy*dt;   
 
             // desenha elementos
             cont.fillStyle = "white";
             cont.fillRect(x,y,20,20);
             requestAnimationFrame (desenha);
             t0 = t;
+        }
+        addEventListener("keydown", teclaPressionada);
+
+        function teclaPressionada(e) {
+            // controle de velocidade
+            switch (e.key) {
+                case "ArrowUp":
+                    vy = -20;
+                    break;
+                case "ArrowDown":
+                    vy = +20;
+                    break;
+
+                    case "ArrowLeft":
+                    vx = -20;
+                    break;
+                case "ArrowRight":
+                    vx = +20;
+                    break;
+
+                default:
+                    break;
+            }
+        
         }
     </script>
 </body>
