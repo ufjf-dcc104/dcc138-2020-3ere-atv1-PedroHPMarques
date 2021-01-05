@@ -18,6 +18,7 @@
         let vx = 0;
         let y = 100;
         let vy = 0; 
+        const V = 80;
         let t0;
         let dt;
         requestAnimationFrame (desenha);
@@ -36,30 +37,49 @@
             // desenha elementos
             cont.fillStyle = "white";
             cont.fillRect(x,y,20,20);
+
             requestAnimationFrame (desenha);
             t0 = t;
         }
         addEventListener("keydown", teclaPressionada);
-
+        addEventListener("Keyup", teclaSolta);
         function teclaPressionada(e) {
             // controle de velocidade
             switch (e.key) {
                 case "ArrowUp":
-                    vy = -20;
+                    vy = -V;
                     break;
                 case "ArrowDown":
-                    vy = +20;
+                    vy = +V;
                     break;
 
                     case "ArrowLeft":
-                    vx = -20;
+                    vx = -V;
                     break;
                 case "ArrowRight":
-                    vx = +20;
+                    vx = +V;
+                    break;
+                   
+                }
+        
+        }
+        function teclaSolta(e) {
+            // controle de velocidade
+            switch (e.key) {
+                case "ArrowUp":
+                    vy = 0;
+                    break;
+                case "ArrowDown":
+                    vy = 0;
                     break;
 
-                default:
+                case "ArrowLeft":
+                    vx = 0;
                     break;
+                case "ArrowRight":
+                    vx = 0;
+                    break;
+
             }
         
         }
