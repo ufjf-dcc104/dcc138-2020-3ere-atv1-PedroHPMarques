@@ -22,6 +22,10 @@
              y : 100,
              vy : 0,
              ay : 0,
+            desenhar: function(){
+                ctx.fillStyle = "white";
+                ctx.fillRect(this.x, this.y,20,20);
+            }
         };
 
         let e = {
@@ -32,6 +36,10 @@
              ey : 200,
              evy : 0,
              eay : 0, 
+             desenhar: function(){
+             ctx.fillStyle = "red";
+            ctx.fillRect(this.x, this.y ,20,20);
+             }
         };
 
         const K = 80;
@@ -47,8 +55,8 @@
             cont.fillRect(0,0,canvas.width,canvas.height);
 
             //Controladores
-           e.ax = 0.5*(p.y - ey) - 0.2*evx;
-            eay = 0.5*(p.x -e.x) - 0.2*evy;
+           e.ax = 0.5*(p.y - e.y) - 0.2*e.vx;
+            eay = 0.5*(p.x -e.x) - 0.2*e.vy;
 
             //Atualiza estado
             p.vx = p.vx + p.ax*dt;
@@ -58,15 +66,13 @@
 
            e.vx =e.vx +e.ax*dt;
            e.x =e.x +e.vx*dt;  
-            evy = evy + eay*dt;
-            ey = ey + evy*dt;   
+            e.vy = e.vy + e.ay*dt;
+            e.y = e.y + e.vy*dt;   
 
             // desenha elementos
-            ctx.fillStyle = "white";
-            ctx.fillRect(p.x,p.y,20,20);
+           p.desenhar();
 
-            ctx.fillStyle = "red";
-            ctx.fillRect(ex,ey ,20,20);
+           e.desenhar();
 
             requestAnimationFrame (desenha);
             t0 = t;
