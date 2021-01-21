@@ -1,151 +1,163 @@
 <!DOCTYPE html>
 <html lang="pt">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DCC 138exemplo 01</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>DCC 138exemplo 01</h1>
     <canvas></canvas>
     <p>Por Pedro Marques</p>
     <script>
-        let canvas = document.querySelector("canvas");
-        let cont = canvas.getContext("2d");
-        canvas.width = 480;
-        canvas.height = 320;
-        let p = {
-
-             x : 100,
-             vx : 0,
-             ax : 0,
-             y : 100,
-             vy : 0,
-             ay : 0,
-             cor : "white",
-            desenhar: desenhaElemento ,
-            mover: moverElemento,
+      let canvas = document.querySelector("canvas");
+      let cont = canvas.getContext("2d");
+      canvas.width = 480;
+      canvas.height = 320;
+      let p = {
+        x: 100,
+        vx: 0,
+        ax: 0,
+        y: 100,
+        vy: 0,
+        ay: 0,
+        cor: "white",
+        desenhar: desenhaElemento,
+        mover: moverElemento,
+      };
+      const sprites = [];
+      for (let ne = 0; ne < 20; ne++) {
+        let e = {
+          x: canvas.width * Math.random(),
+          vx: 0,
+          ax: 0,
+          y: canvas.height * Math.random(),
+          vy: 0,
+          ay: 0,
+          cor: "red",
+          desenhar: desenhaElemento,
+          mover: moverElemento,
+          controla: perseguirAlvo,
         };
-        const sprites = [];
-        for (let ne = 0; ne < 20; ne++) {
-           
-            let e = {
-    
-                x : canvas.width * Math.random(),
-                vx : 0,
-                ax : 0,
-                y : canvas.height * Math.random(),
-                vy : 0,
-                ay : 0, 
-                 cor : "red",
-                 desenhar: desenhaElemento ,
-                mover : moverElemento , 
-                controla : perseguirAlvo,
-            
-            };
-            sprites.push(e);
+        sprites.push(e);
+      }
+
+      let o = {
+        x: -1000,
+        vx: 0,
+        ax: 0,
+        y: 150,
+        vy: 0,
+        ay: 0,
+        cor: "blue",
+        desenhar: desenhaElemento,
+        mover: moverElemento,
+        controlar: function(){
+            if(this.x > canvas.width + 60){
+                this.x = -1000;
+                this.ax = 0;
+                this.vx = 0;
+            }
+        }
+      };
+      sprites.push(o);
+      const K = 80;
+      let t0;
+      let dt;
+      requestAnimationFrame(desenha);
+
+      function desenha(t) {
+        t0 = t0 ?? t;
+        dt = (t - t0) / 1000;
+        // desenha fundo
+        cont.fillStyle = "black";
+        cont.fillRect(0, 0, canvas.width, canvas.height);
+
+        p.mover();
+        p.desenhar();
+
+        for (let s = 0; s < sprites; s++) {
+          const sprite = sprites[s];
+
+          //Controladores
+          if (sprite.controlar) sprites[0].controlar(p);
+          //Atualiza estado
+          sprites.mover?.();
+          // desenha elementos
+          sprites.desenhar();
         }
 
-        const K = 80;
-        let t0;
-        let dt;
-        requestAnimationFrame (desenha);
+        requestAnimationFrame(desenha);
+        t0 = t;
+      }
+      function moverElemento() {
+        this.vx = this.vx + this.ax * dt;
+        this.x = this.x + this.vx * dt;
+        this.vy = this.vy + this.ay * dt;
+        this.y = this.y + this.vy * dt;
+      }
 
-        function desenha(t){
-            t0 = t0 ?? t;
-            dt = (t - t0)/1000;
-            // desenha fundo
-            cont.fillStyle = "black";
-            cont.fillRect(0,0,canvas.width,canvas.height);
+      function desenhaElemento() {
+        ctx.fillStyle = this.cor;
+        ctx.fillRect(this.x, this.y, 20, 20);
+      }
 
-            p.mover();
-            p.desenhar();
-            
-            for (let s = 0; s < sprites; s++) {
-                const sprite = sprites[s];
-                
-                //Controladores
-                sprites[0].controlar(p);
-                //Atualiza estado
-                sprites[0].mover();
-                // desenha elementos
-                sprites[0].desenhar();
-            }
-            
+      function perseguirAlvo(alvo) {
+        e.ax = 0.5 * (alvo.y - this.y) - 0.2 * this.vx;
+        eay = 0.5 * (alvo.x - this.x) - 0.2 * this.vy;
+      }
 
+      function evitarAlvo(alvo) {
+        e.ax = -0.5 * (alvo.y - this.y) - 0.2 * this.vx;
+        eay = -0.5 * (alvo.x - this.x) - 0.2 * this.vy;
+      }
 
-            requestAnimationFrame (desenha);
-            t0 = t;
+      addEventListener("keydown", teclaPressionada);
+      addEventListener("Keyup", teclaSolta);
+      function teclaPressionada(event) {
+        // controle de velocidade
+        switch (event.key) {
+          case "ArrowUp":
+            p.ay = -K;
+            break;
+          case "ArrowDown":
+            p.ay = +K;
+            break;
+
+          case "ArrowLeft":
+            p.ax = -K;
+            break;
+          case "ArrowRight":
+            p.ax = +K;
+            break;
         }
-            function moverElemento (){
-            this.vx =this.vx +this.ax*dt;
-            this.x =this.x +this.vx*dt;  
-            this.vy = this.vy + this.ay*dt;
-            this.y = this.y + this.vy*dt;   
-            }
+      }
+      function teclaSolta(event) {
+        // controle de velocidade
+        switch (event.key) {
+          case "ArrowUp":
+            p.ay = 0;
+            break;
+          case "ArrowDown":
+            p.ay = 0;
+            break;
 
-            function desenhaElemento (){
-             ctx.fillStyle = this.cor;
-            ctx.fillRect(this.x, this.y ,20,20);
-            }
-
-            function perseguirAlvo (alvo){
-            e.ax = 0.5*(alvo.y - this.y) - 0.2*this.vx;
-            eay = 0.5*(alvo.x - this.x) - 0.2*this.vy;
-            }
-
-            function evitarAlvo (alvo){
-            e.ax = -0.5*(alvo.y - this.y) - 0.2*this.vx;
-            eay = -0.5*(alvo.x - this.x) - 0.2*this.vy;
-            }
-
-
-
-        addEventListener("keydown", teclaPressionada);
-        addEventListener("Keyup", teclaSolta);
-        function teclaPressionada(event) {
-            // controle de velocidade
-            switch (event.key) {
-                case "ArrowUp":
-                    p.ay = -K;
-                    break;
-                case "ArrowDown":
-                    p.ay = +K;
-                    break;
-
-                    case "ArrowLeft":
-                    p.ax = -K;
-                    break;
-                case "ArrowRight":
-                    p.ax = +K;
-                    break;
-                   
-                }
-        
+          case "ArrowLeft":
+            p.ax = 0;
+            break;
+          case "ArrowRight":
+            p.ax = 0;
+            break;
+        case " ":
+                if(o.x === 1000){
+            o.x = p.x;
+            o.y = p.y;
+            o.vx = 0;
+            o.ax = 100;
+            break;
         }
-        function teclaSolta(event) {
-            // controle de velocidade
-            switch (event.key) {
-                case "ArrowUp":
-                  
-                    p.ay = 0;
-                    break;
-                case "ArrowDown":
-                   
-                    p.ay = 0;
-                    break;
-
-                case "ArrowLeft":
-                    
-                    p.ax = 0;
-                    break;
-                case "ArrowRight":
-                    p.ax = 0;
-                    break;
-
-            }
-        
-        }
+    }
+      }
     </script>
-</body>
+  </body>
 </html>
