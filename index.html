@@ -10,188 +10,195 @@
     <canvas></canvas>
     <p>Por Pedro Marques</p>
     <script>
-      let canvas = document.querySelector("canvas");
-      let cont = canvas.getContext("2d");
-      canvas.width = 480;
-      canvas.height = 320;
+        let canvas = document.querySelector("canvas");
+        let cont = canvas.getContext("2d");
+        canvas.width = 480;
+        canvas.height = 320;
 
-      let pontos = 0;
-      
+        let pontos = 0;
 
-      let p = {
-        x: 100,
-        vx: 0,
-        ax: 0,
-        y: 100,
-        vy: 0,
-        ay: 0,
-        cor: "white",
-        desenhar: desenhaElemento,
-        mover: moverElemento,
-      };
-      const sprites = [];
-      for (let ne = 0; ne < 20; ne++) {
-        let e = {
-          x: canvas.width * (1 + 10 * Math.random()),
-          vx: -20,
+
+        let p = {
+          x: 100,
+          vx: 0,
           ax: 0,
-          y: canvas.height * Math.random(),
+          y: 100,
           vy: 0,
           ay: 0,
-          cor: "red",
+          w :40,
+          H : 15,
+          cor: "white",
           desenhar: desenhaElemento,
           mover: moverElemento,
-          controla: perseguirAlvo,
         };
-        sprites.push(e);
-      }
-
-      let o = {
-        x: -1000,
-        vx: 0,
-        ax: 0,
-        y: 150,
-        vy: 0,
-        ay: 0,
-        cor: "blue",
-        desenhar: desenhaElemento,
-        mover: moverElemento,
-        controlar: function(){
-            if(this.x > canvas.width + 60){
-                this.x = -1000;
-                this.ax = 0;
-                this.vx = 0;
-            }
+        const sprites = [];
+        for (let ne = 0; ne < 20; ne++) {
+          let e = {
+            x: canvas.width * (1 + 10 * Math.random()),
+            vx: -20,
+            ax: 0,
+            y: canvas.height * Math.random(),
+            vy: 0,
+            ay: 0,
+            w :15,
+          H : 15,
+            cor: "red",
+            desenhar: desenhaElemento,
+            mover: moverElemento,
+            controla: perseguirAlvo,
+          };
+          sprites.push(e);
         }
-      };
-      sprites.push(o);
-      const K = 80;
-      let t0;
-      let dt;
-      requestAnimationFrame(desenha);
 
-      function desenha(t) {
-        t0 = t0 ?? t;
-        dt = (t - t0) / 1000;
-        // desenha fundo
-        cont.fillStyle = "black";
-        cont.fillRect(0, 0, canvas.width, canvas.height);
-
-        p.mover();
-        p.desenhar();
-
-        for (let s = 0; s < sprites; s++) {
-          const sprite = sprites[s];
-
-          //Controladores
-          if (sprite.controlar) sprites[0].controlar(p);
-          //Atualiza estado
-          sprites.mover?.();
-          // desenha elementos
-          sprites.desenhar();
-
-          if(colidiram(o, sprite) && o !=== sprite){
-            o.x = -1000;
-            o.y = -1000;
-            o.vx = 0;
-            o.ax = 0;
-            sprite.x = 1000;
-            sprite.vx = 100;
-            sprite.ax = 0;
-            pontos ++;
+        let o = {
+          x: -1000,
+          vx: 0,
+          ax: 0,
+          y: 150,
+          vy: 0,
+          ay: 0,
+          w :5,
+          H : 5,
+          cor: "blue",
+          desenhar: desenhaElemento,
+          mover: moverElemento,
+          controlar: function(){
+              if(this.x > canvas.width + 60){
+                  this.x = -1000;
+                  this.ax = 0;
+                  this.vx = 0;
+              }
           }
-
-          if(colidiram(p, sprite) && o !=== sprite){
-            sprite.x = 1000;
-            sprite.vx = 100;
-            sprite.ax = 0;
-            pontos -= 3;
-          }
-        }
-        ctx.fillStyle = "yellow";
-        ctx.font = "20px Impact";
-        ctx.fillText(pontos,10,30);
-
+        };
+        sprites.push(o);
+        const K = 80;
+        let t0;
+        let dt;
         requestAnimationFrame(desenha);
-        t0 = t;
+
+        function desenha(t) {
+          t0 = t0 ?? t;
+          dt = (t - t0) / 1000;
+          // desenha fundo
+          cont.fillStyle = "black";
+          cont.fillRect(0, 0, canvas.width, canvas.height);
+
+          p.mover();
+
+          for (let s = 0; s < sprites; s++) {
+            const sprite = sprites[s];
+
+            //Controladores
+            if (sprite.controlar) sprites[0].controlar(p);
+            //Atualiza estado
+            sprites.mover?.();
+            // desenha elementos
+            sprites.desenhar();
+
+            if(colidiram(o, sprite) && o !=== sprite){
+                o.x = -1000;
+                o.y = -1000;
+                o.vx = 0;
+                o.ax = 0;
+                sprite.x = 1000;
+                sprite.vx = 100;
+                sprite.ax = 0;
+                pontos ++;
+              }
+
+              if(colidiram(p, sprite) && o !=== sprite){
+                  sprite.x = 1000;
+                  sprite.vx = 100;
+                  sprite.ax = 0;
+                  pontos -= 3;
+              }
+          }
+          p.desenhar();
+
+          ctx.fillStyle = "yellow";
+          ctx.font = "20px Impact";
+          ctx.fillText(pontos,10,30);
+
+          requestAnimationFrame(desenha);
+          t0 = t;
       }
       function moverElemento() {
-        this.vx = this.vx + this.ax * dt;
-        this.x = this.x + this.vx * dt;
-        this.vy = this.vy + this.ay * dt;
-        this.y = this.y + this.vy * dt;
+          this.vx = this.vx + this.ax * dt;
+          this.x = this.x + this.vx * dt;
+          this.vy = this.vy + this.ay * dt;
+          this.y = this.y + this.vy * dt;
       }
 
       function desenhaElemento() {
-        ctx.fillStyle = this.cor;
-        ctx.fillRect(this.x, this.y, 20, 20);
+          ctx.fillStyle = this.cor;
+          ctx.fillRect(this.x, this.y, this.w, this.h);
       }
 
       function perseguirAlvo(alvo) {
-        this.ax = 100 * Math.sign(alvo.y - this.y) - 0.2 * this.vx;
-        this.ay = 100 * Math.sign(alvo.x - this.x) - 0.2 * this.vy;
+          this.ax = 100 * Math.sign(alvo.y - this.y) - 0.2 * this.vx;
+          this.ay = 100 * Math.sign(alvo.x - this.x) - 0.2 * this.vy;
       }
 
       function evitarAlvo(alvo) {
-        this.ax = -0.5 * (alvo.y - this.y) - 0.2 * this.vx;
-        this.ay = -0.5 * (alvo.x - this.x) - 0.2 * this.vy;
-      }
-
-      addEventListener("keydown", teclaPressionada);
-      addEventListener("Keyup", teclaSolta);
-      function teclaPressionada(event) {
-        // controle de velocidade
-        switch (event.key) {
-          case "ArrowUp":
-            p.ay = -K;
-            break;
-          case "ArrowDown":
-            p.ay = +K;
-            break;
-
-          case "ArrowLeft":
-            p.ax = -K;
-            break;
-          case "ArrowRight":
-            p.ax = +K;
-            break;
+          this.ax = -0.5 * (alvo.y - this.y) - 0.2 * this.vx;
+          this.ay = -0.5 * (alvo.x - this.x) - 0.2 * this.vy;
         }
-      }
-      function teclaSolta(event) {
-        // controle de velocidade
-        switch (event.key) {
-          case "ArrowUp":
-            p.ay = 0;
-            break;
-          case "ArrowDown":
-            p.ay = 0;
-            break;
 
-          case "ArrowLeft":
-            p.ax = 0;
-            break;
-          case "ArrowRight":
-            p.ax = 0;
-            break;
-        case " ":
-                if(o.x === 1000){
-            o.x = p.x;
-            o.y = p.y;
-            o.vx = 0;
-            o.ax = 100;
-                }
-            break;
+        addEventListener("keydown", teclaPressionada);
+        addEventListener("Keyup", teclaSolta);
+        function teclaPressionada(event) {
+          // controle de velocidade
+          switch (event.key) {
+            case "ArrowUp":
+              p.ay = -K;
+              break;
+            case "ArrowDown":
+              p.ay = +K;
+              break;
+
+            case "ArrowLeft":
+              p.ax = -K;
+              break;
+            case "ArrowRight":
+              p.ax = +K;
+              break;
+          }
         }
-    }
-        function colidiram(A,B){
-            return !(
-            (a.x > b.x + 20) 
-            ||(a.x + 20 < b.x) 
-            ||(a.y > b.y + 20) 
-            ||(a.y + 20 < b.y) 
-            )
-        }
+        function teclaSolta(event) {
+          // controle de velocidade
+          switch (event.key) {
+            case "ArrowUp":
+              p.ay = 0;
+              break;
+            case "ArrowDown":
+              p.ay = 0;
+              break;
+
+            case "ArrowLeft":
+              p.ax = 0;
+              break;
+            case "ArrowRight":
+              p.ax = 0;
+              break;
+          case " ":
+                  if(o.x === 1000){
+              o.x = p.x;
+              o.y = p.y;
+              o.vx = 0;
+              o.ax = 100;
+                  }
+              break;
+          }
       }
+          function colidiram(A,B){
+              return !(
+              (A.x > B.x + B.w)
+              ||(A.x + A.w < B.x)
+              ||(A.y > B.y + B.h)
+              ||(A.y + A.h < B.y)
+              )
+          }
+        }
     </script>
   </body>
 </html>
