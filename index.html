@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DCC 138 exemplo 01</title>
+    <title>DCC 138e.xemplo 01</title>
 </head>
 <body>
-    <h1>DCC 138 exemplo 01</h1>
+    <h1>DCC 138e.xemplo 01</h1>
     <canvas></canvas>
     <p>Por Pedro Marques</p>
     <script>
@@ -24,12 +24,15 @@
              ay : 0,
         };
 
-        let ex = 300;
-        let evx = 0;
-        let eax = 0;
-        let ey = 200;
-        let evy = 0;
-        let eay = 0; 
+        let e = {
+
+            x : 300,
+            vx : 0,
+            ax : 0,
+             ey : 200,
+             evy : 0,
+             eay : 0, 
+        };
 
         const K = 80;
         let t0;
@@ -44,8 +47,8 @@
             cont.fillRect(0,0,canvas.width,canvas.height);
 
             //Controladores
-            eax = 0.5*(p.y - ey) - 0.2*evx;
-            eay = 0.5*(p.x - ex) - 0.2*evy;
+           e.ax = 0.5*(p.y - ey) - 0.2*evx;
+            eay = 0.5*(p.x -e.x) - 0.2*evy;
 
             //Atualiza estado
             p.vx = p.vx + p.ax*dt;
@@ -53,8 +56,8 @@
             p.vy = p.vy + p.ay*dt;
             p.y = p.y + p.vy*dt;  
 
-            evx = evx + eax*dt;
-            ex = ex + evx*dt;  
+           e.vx =e.vx +e.ax*dt;
+           e.x =e.x +e.vx*dt;  
             evy = evy + eay*dt;
             ey = ey + evy*dt;   
 
@@ -70,9 +73,9 @@
         }
         addEventListener("keydown", teclaPressionada);
         addEventListener("Keyup", teclaSolta);
-        function teclaPressionada(e) {
+        function teclaPressionada(event) {
             // controle de velocidade
-            switch (e.key) {
+            switch (event.key) {
                 case "ArrowUp":
                     p.ay = -K;
                     break;
@@ -90,25 +93,24 @@
                 }
         
         }
-        function teclaSolta(e) {
+        function teclaSolta(event) {
             // controle de velocidade
-            switch (e.key) {
+            switch (event.key) {
                 case "ArrowUp":
-                    vy = 0;
-                    ay = 0;
+                  
+                    p.ay = 0;
                     break;
                 case "ArrowDown":
-                    vy = 0;
-                    ay = 0;
+                   
+                    p.ay = 0;
                     break;
 
                 case "ArrowLeft":
-                    vx = 0;
-                    ax = 0;
+                    
+                    p.ax = 0;
                     break;
                 case "ArrowRight":
-                    vx = 0;
-                    ax = 0;
+                    p.ax = 0;
                     break;
 
             }
